@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<HTML lang="en" class="no-js">
+	<head>
+			<meta charset="UTF-8" />
+			<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+		
+		<title>Little Blue Owl</title>
+		
+			<meta name="description" content="Personal coding project portfolio" />
+			<meta name="keywords" content="CV, Portfolio, Coding,  Development, Java, JS, Css, C++, CSharp" />
+			<meta name="author" content="ChevecheDev" />
+			
+	
+		<link rel="stylesheet" type="text/css" href="../css/Main.css" />
+		<link rel="stylesheet" type="text/css" href="../css/sphere.css" />
+	
+	</head>
+	
+	
+<body>
+
+
+	<div class="bloc_header">				
+						<div class="content">
+							<canvas class="scene scene--full" id="scene"></canvas>
+								<script type="x-shader/x-vertex" id="wrapVertexShader">
+									attribute float size;
+									attribute vec3 color;
+									varying vec3 vColor;
+									void main() {
+										vColor = color;
+										vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+										gl_PointSize = size * ( 350.0 / - mvPosition.z );
+										gl_Position = projectionMatrix * mvPosition;
+									}
+								</script>
+								<script type="x-shader/x-fragment" id="wrapFragmentShader">
+									varying vec3 vColor;
+									uniform sampler2D texture;
+									void main(){
+										vec4 textureColor = texture2D( texture, gl_PointCoord );
+										if ( textureColor.a < 0.3 ) discard;
+										vec4 color = vec4(vColor.xyz, 1.0) * textureColor;
+										gl_FragColor = color;
+									}
+								</script>
+						
+						
+						<div class="content__inner">
+							<span class="page_title">My Little Blue World</span>
+							<span class="page_title">BIO</span>
+						</div>							
+
+						</div>
+
+	</div>
+
+
+	<div class="bloc_nav grid">
+			<nav class="nav grid_element grid_4 text_center">
+					<a href="../index.html">Catalog</a>
+					<a href="#">Bio</a>	
+					<a href="Contact.html">Contact</a>		
+			</nav>
+
+			
+	</div>
+	
+	
+	
+	<div class="bloc_section">
+
+
+			<div class="grid grid_5">
+						
+						<div class="grid_title text-align">
+						<span class="page_Innertitle">COMING SOON...</span>
+						</div>
+						
+			</div>
+
+
+
+		</div>
+	</div>
+
+	<div class="bloc_section bloc_section_alt">
+			<div class="grid grid_5">
+			
+			
+					<div class="grid_element grid_2">
+						<h2>Ideas to come:</h2>
+							<ul class="text_List">
+								<li><strong>Creating the template for the project page!</strong></</li>
+								<li>Creating a contact formular</li>
+								<li>Review the header animation...</li>
+								<li>Updating 2 new projects soon...</li>
+								<li>Adding some new static features to the site</li>
+							</ul>
+					</div>
+
+					<div class="grid_element grid_2">
+								<h2>Let's be in contact :</h2>
+									<img src="Mail" alt="Email me" width="60" height="315">
+								<p class="text_short">link to come...</p>
+					</div>
+					
+					
+					<div class="grid_element grid_2">
+								<h2>FAQ</h2>
+									<img src="FAQ" alt="FAQ" width="60" height="315">
+								<p class="text_short">all the project presented here are </p>
+					</div>
+					
+	
+			</div> 
+			
+			
+			<div class="grid grid_5">
+					<div class="grid_element grid_2">
+							<p class="text_disclaimer">201X | Cheveche | Personal Project Catalog </p>
+					</div>
+			
+			</div> 		
+	</div>
+	
+	
+	
+		
+		<script src="../js/three.min.js"></script>
+		<script src="../js/TweenMax.min.js"></script>
+		<script src="../js/sphere.js"></script>
+	
+	
+	
+	
+	
+</body>
+
+</HTML>
