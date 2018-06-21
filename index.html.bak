@@ -82,15 +82,15 @@
 						
 							<div class="image image_Prj">
 							
-								<img src="img/Prj/prjtwo-pypro.jpg" alt="" width="200" height="200">
+								<img src="img/prj/prjtwo-pypro.jpg" alt="" width="200" height="200">
 							</div>
 							
 							<h2>P3: Chatbot</h2>
 							
 							<table>
 								<tr>
-									<td><img src="img/Icons/PythonIcon.png" alt="" width="32" height="32"></td>
-									<td><img src="img/Icons/SQLIcon.png" alt="" width="32" height="32"></td>
+									<td><img src="img/icons/PythonIcon.png" alt="" width="32" height="32"></td>
+									<td><img src="img/icons/SQLIcon.png" alt="" width="32" height="32"></td>
 								</tr>
 							</table>
 
@@ -107,14 +107,14 @@
 						
 							<div class="image image_Prj">
 							
-								<img src="img/Prj/prjthree-javagame.jpg" alt="" width="200" height="200">
+								<img src="img/prj/prjthree-javagame.jpg" alt="" width="200" height="200">
 							</div>
 							
 							<h2>P2: Tiles World</h2>
 							
 							<table>
 								<tr>
-									<td><img src="img/Icons/JavaIcon.png" alt="" width="32" height="32"></td>
+									<td><img src="img/icons/JavaIcon.png" alt="" width="32" height="32"></td>
 								</tr>
 							</table>
 
@@ -133,7 +133,7 @@
 						
 							<div class="image image_Prj">
 							
-								<img src="img/Prj/prjone-web.jpg" alt="" width="200" height="200">
+								<img src="img/prj/prjone-web.jpg" alt="" width="200" height="200">
 							
 							</div>
 							
@@ -141,9 +141,9 @@
 							
 							<table>
 								<tr>
-									<td><img src="img/Icons/Html5Icon.png" alt="" width="32" height="32"></td>
-									<td><img src="img/Icons/JSIcon.png" alt="" width="32" height="32"></td>
-									<td><img src="img/Icons/CssIcon.png" alt="" width="32" height="32"></td>
+									<td><img src="img/icons/Html5Icon.png" alt="" width="32" height="32"></td>
+									<td><img src="img/icons/JSIcon.png" alt="" width="32" height="32"></td>
+									<td><img src="img/icons/CssIcon.png" alt="" width="32" height="32"></td>
 								</tr>
 							</table>
 
@@ -205,7 +205,7 @@
 		
 		<script src="js/three.min.js"></script>
 		<script src="js/TweenMax.min.js"></script>
-		<script src="js/Sphere.js"></script>
+		<script src="js/sphere.js"></script>
 	
 	
 	
