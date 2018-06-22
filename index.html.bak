@@ -5,7 +5,7 @@
 			<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
 		
-		<title>Little Blue Owl</title>
+		<title>PCube</title>
 		
 			<meta name="description" content="Personal coding project portfolio" />
 			<meta name="keywords" content="CV, Portfolio, Coding,  Development, Java, JS, Css, C++, CSharp" />
@@ -23,21 +23,28 @@
 
 	<div class="bloc_header">				
 						<div class="content">
+							
 							<canvas class="scene scene--full" id="scene"></canvas>
+							
 							<script type="x-shader/x-vertex" id="wrapVertexShader">
+								
 								attribute float size;
 								attribute vec3 color;
 								varying vec3 vColor;
+								
 								void main() {
 									vColor = color;
 									vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
 									gl_PointSize = size * ( 350.0 / - mvPosition.z );
 									gl_Position = projectionMatrix * mvPosition;
 								}
+								
 							</script>
+							
 							<script type="x-shader/x-fragment" id="wrapFragmentShader">
 								varying vec3 vColor;
 								uniform sampler2D texture;
+							
 								void main(){
 									vec4 textureColor = texture2D( texture, gl_PointCoord );
 									if ( textureColor.a < 0.3 ) discard;
@@ -58,7 +65,7 @@
 
 	<div class="bloc_nav grid">
 			<nav class="nav grid_element grid_4 text_center">
-					<a href="#">Catalog</a>
+					<a href="#catalog">Catalog</a>
 					<a href="page/Bio.html">Bio</a>	
 					<a href="#">Contact</a>		
 			</nav>
@@ -68,7 +75,7 @@
 	
 	
 	
-	<div class="bloc_section">
+	<div class="bloc_section" id="catalog">
 
 
 			<div class="grid grid_5">
@@ -185,7 +192,7 @@
 					<div class="grid_element grid_2">
 								<h2>FAQ</h2>
 									<img src="FAQ" alt="FAQ" width="60" height="315">
-								<p class="text_short">all the project presented here are </p>
+								<p class="text_short">coming soon </p>
 					</div>
 					
 	
@@ -194,7 +201,7 @@
 			
 			<div class="grid grid_5">
 					<div class="grid_element grid_2">
-							<p class="text_disclaimer">201X | Cheveche | Personal Project Catalog </p>
+							<p class="text_disclaimer">201X | Cheveche | Personal Project Portfolio </p>
 					</div>
 			
 			</div> 		

@@ -20,7 +20,7 @@ img {
 	align-items: center;
 	align-content: center;
 	margin: 0 auto;
-	min-height: 85vh;
+	min-height: 65vh;
 	background: #00000;
 }
 .content__inner {
@@ -38,7 +38,7 @@ img {
 }
 .scene--full {
 	width: 100%;
-	height: 80vh;
+	height: 70vh;
 }
 
 .grid {
