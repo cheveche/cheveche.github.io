@@ -13,6 +13,11 @@ img {
  max-width:100%;
  height:auto
 }
+a{
+ text-decoration:none
+}
+
+
 .content {
 	position: relative;
 	display: grid;
@@ -177,7 +182,7 @@ img {
  background: #ffffff;
  text-align: center;
  z-index: 2;
- font-size:115%;
+ font-size:120%;
  color:#03589e;
  text-transform:uppercase;
  letter-spacing:.25em;
@@ -186,6 +191,19 @@ img {
  -webkit-animation:.5s .5s fade backwards ease-out;
  animation:.30s .30s fade backwards ease-out
 }
+.page_subtitle {
+ display:block;
+ background: #ffffff;
+ text-align: center;
+ z-index: 2;
+ font-size:150%;
+ color:#0b83e5;
+ text-transform:uppercase;
+ letter-spacing:.25em;
+ word-spacing:.2em;
+ margin:.5em 0;
+}
+
 .page_Innertitle{
  display:block;
  text-align: center;
