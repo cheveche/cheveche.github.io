@@ -12,7 +12,7 @@
 			<meta name="author" content="ChevecheDev" />
 			
 	
-		<link rel="stylesheet" type="text/css" href="css/Main.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
 		<link rel="stylesheet" type="text/css" href="css/sphere.css" />
 	
 	</head>
@@ -212,7 +212,7 @@
 		
 		<script src="js/three.min.js"></script>
 		<script src="js/TweenMax.min.js"></script>
-		<script src="js/Sphere.js"></script>
+		<script src="js/sphere.js"></script>
 	
 	
 	
