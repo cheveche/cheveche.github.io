@@ -127,10 +127,10 @@ document.addEventListener('DOMContentLoaded', () => {
     targetY += (mouseY - targetY) * 0.02;
 
     // 2. BASE AUTO-ROTATION (Lower number = slower spinning)
-    // Changed from 0.002 to 0.0005 (4x slower) on Y-axis
-    // Changed from 0.001 to 0.0002 (5x slower) on X-axis
-    sphere.rotation.y += 0.0005 + targetX;
-    sphere.rotation.x += 0.0002 + targetY;
+    // Changed from 0.002 to 0.00005 (4x slower) on Y-axis
+    // Changed from 0.001 to 0.00002 (5x slower) on X-axis
+    sphere.rotation.y += 0.00005 + targetX;
+    sphere.rotation.x += 0.00002 + targetY;
 
     // 3. BREATHING PULSE SPEED (Lower number = slower expansion/contraction)
     // Changed from 0.8 to 0.3 for a very slow, ambient "breathing" effect
