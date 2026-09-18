@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. Scene Setup
     const scene = new THREE.Scene();
-    scene.background = null; // Transparent
+    scene.background = null; 
 
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.z = 35;
@@ -20,10 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
         antialias: true 
     });
     
-    // Force initial size to prevent 0x0 canvas bug
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
-
     console.log("Three.js renderer initialized");
 
     // 2. Procedural Texture Generation
@@ -54,8 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const colors = new Float32Array(particleCount * 3);
     const sizes = new Float32Array(particleCount);
 
-    const color1 = new THREE.Color(0x38bdf8); // Cyan
-    const color2 = new THREE.Color(0x818cf8); // Purple
+    const color1 = new THREE.Color(0x38bdf8); 
+    const color2 = new THREE.Color(0x818cf8); 
     const goldenAngle = Math.PI * (3 - Math.sqrt(5));
 
     for (let i = 0; i < particleCount; i++) {
@@ -84,13 +82,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const vertexShaderEl = document.getElementById('wrapVertexShader');
     const fragmentShaderEl = document.getElementById('wrapFragmentShader');
 
-    if (!vertexShaderEl || !fragmentShaderEl) {
-        console.error("Shader scripts not found in HTML!");
-    }
-
     const material = new THREE.ShaderMaterial({
         uniforms: {
-            texture: { value: getProceduralTexture() }
+            uTexture: { value: getProceduralTexture() } // FIXED: Renamed from 'texture' to 'uTexture'
         },
         vertexShader: vertexShaderEl ? vertexShaderEl.textContent : '',
         fragmentShader: fragmentShaderEl ? fragmentShaderEl.textContent : '',
