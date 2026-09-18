@@ -1,237 +1,191 @@
 <!DOCTYPE html>
-<HTML lang="en" class="no-js">
-	<head>
-	
-	<!-- Global site tag (gtag.js) - Google Analytics -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-121734935-1"></script>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Personal coding project portfolio by ChevecheDev showcasing Java, Python, JS, and web development experiments.">
+    <meta name="keywords" content="CV, Portfolio, Coding, Development, Java, Python, JavaScript, CSS, C++">
+    <meta name="author" content="ChevecheDev">
+    
+    <!-- Open Graph for Social Sharing -->
+    <meta property="og:title" content="PCube | Personal Project Portfolio">
+    <meta property="og:description" content="Explore my personal coding projects, experiments, and web development journey.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://cheveche.github.io/">
+    
+    <title>PCube | Personal Project Portfolio</title>
+    
+    <!-- Modern CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Modern GSAP (replaces TweenMax) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+    <!-- Three.js (Modern CDN) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+    <script src="js/sphere.js" defer></script>
 
-		
-		
-
-			<meta charset="UTF-8" />
-			<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
-			<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-		
-		<title>PCube</title>
-		
-			<meta name="description" content="Personal coding project portfolio" />
-			<meta name="keywords" content="CV, Portfolio, Coding,  Development, Java, JS, Css, C++, CSharp" />
-			<meta name="author" content="ChevecheDev" />
-			
-	
-		<link rel="stylesheet" type="text/css" href="css/main.css" />
-		<link rel="stylesheet" type="text/css" href="css/sphere.css" />
-	
-	</head>
-	
-	
+    <!-- Google Analytics 4 (Replace G-XXXXXXXXXX with your actual GA4 ID) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
+</head>
 <body>
 
+    <header class="hero-header">
+        <canvas id="scene" class="hero-canvas" aria-hidden="true"></canvas>
+        
+        <!-- Your existing shaders (kept intact for your sphere.js) -->
+        <script type="x-shader/x-vertex" id="wrapVertexShader">
+            attribute float size;
+            attribute vec3 color;
+            varying vec3 vColor;
+            void main() {
+                vColor = color;
+                vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+                gl_PointSize = size * ( 350.0 / - mvPosition.z );
+                gl_Position = projectionMatrix * mvPosition;
+            }
+        </script>
+        <script type="x-shader/x-fragment" id="wrapFragmentShader">
+            varying vec3 vColor;
+            uniform sampler2D texture;
+            void main(){
+                vec4 textureColor = texture2D( texture, gl_PointCoord );
+                if ( textureColor.a < 0.3 ) discard;
+                vec4 color = vec4(vColor.xyz, 1.0) * textureColor;
+                gl_FragColor = color;
+            }
+        </script>
 
-	<div class="bloc_header">				
-						<div class="content">
-							
-							<canvas class="scene scene__full" id="scene"></canvas>
-							
-							<script type="x-shader/x-vertex" id="wrapVertexShader">
-								
-								attribute float size;
-								attribute vec3 color;
-								varying vec3 vColor;
-								
-								void main() {
-									vColor = color;
-									vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-									gl_PointSize = size * ( 350.0 / - mvPosition.z );
-									gl_Position = projectionMatrix * mvPosition;
-								}
-								
-							</script>
-							
-							<script type="x-shader/x-fragment" id="wrapFragmentShader">
-								varying vec3 vColor;
-								uniform sampler2D texture;
-							
-								void main(){
-									vec4 textureColor = texture2D( texture, gl_PointCoord );
-									if ( textureColor.a < 0.3 ) discard;
-									vec4 color = vec4(vColor.xyz, 1.0) * textureColor;
-									gl_FragColor = color;
-								}
-							</script>
-						
-						
-						<div class="content__inner">
-							<span class="page_title">Personal Project Portfolio</span>
-						</div>							
+        <div class="hero-content">
+            <h1 class="hero-title">Personal Project Portfolio</h1>
+            <p class="hero-subtitle">Experimentation, learning, and creative coding.</p>
+        </div>
+    </header>
 
-						</div>
+    <nav class="main-nav">
+        <ul class="nav-list">
+            <li><a href="#catalog">Projects</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
 
-	</div>
+    <main>
+        <!-- Projects Catalog -->
+        <section id="catalog" class="section">
+            <div class="container">
+                <header class="section-header">
+                    <h2 class="section-title">Project Catalog</h2>
+                    <p class="section-subtitle">Click on a project to download its source code.</p>
+                </header>
 
+                <div class="projects-grid">
+                    <!-- Project 1 -->
+                    <article class="project-card">
+                        <a href="https://github.com/cheveche/Chatbot/archive/master.zip" class="project-link" aria-label="Download Chatbot project source code">
+                            <div class="project-image">
+                                <img src="img/Prj/prjtwo-pypro.jpg" alt="Chatbot project preview" loading="lazy" width="200" height="200">
+                            </div>
+                            <h3>P3: Chatbot</h3>
+                            <div class="tech-stack">
+                                <img src="img/Icons/PythonIcon.png" alt="Python" width="32" height="32" loading="lazy">
+                                <img src="img/Icons/SQLIcon.png" alt="SQL" width="32" height="32" loading="lazy">
+                            </div>
+                            <p>A simple chatbot developed in Python that mixes scripted answers with improvisation based on previous discussions.</p>
+                        </a>
+                    </article>
 
-	<div class="bloc_nav grid">
-			<nav class="nav grid_element grid_4 text_center">
-					<a href="#catalog">the Projects</a>	
-					<a href="#about">About</a>	
-					<a href="#about">Contact</a>		
-			</nav>
+                    <!-- Project 2 -->
+                    <article class="project-card">
+                        <a href="https://github.com/cheveche/Tileworld/archive/master.zip" class="project-link" aria-label="Download Tiles World project source code">
+                            <div class="project-image">
+                                <img src="img/Prj/prjthree-javagame.jpg" alt="Tiles World game preview" loading="lazy" width="200" height="200">
+                            </div>
+                            <h3>P2: Tiles World</h3>
+                            <div class="tech-stack">
+                                <img src="img/Icons/JavaIcon.png" alt="Java" width="32" height="32" loading="lazy">
+                            </div>
+                            <p>A simple game being developed to apply core Java language principles. Updated regularly.</p>
+                        </a>
+                    </article>
 
-			
-	</div>
-	
-	
-	
-	<div class="bloc_section" id="catalog">
+                    <!-- Project 3 -->
+                    <article class="project-card">
+                        <a href="https://github.com/cheveche/cheveche.github.io/archive/master.zip" class="project-link" aria-label="Download Web Portfolio project source code">
+                            <div class="project-image">
+                                <img src="img/Prj/prjone-web.jpg" alt="Web Portfolio preview" loading="lazy" width="200" height="200">
+                            </div>
+                            <h3>P1: Web Portfolio</h3>
+                            <div class="tech-stack">
+                                <img src="img/Icons/Html5Icon.png" alt="HTML5" width="32" height="32" loading="lazy">
+                                <img src="img/Icons/JSIcon.png" alt="JavaScript" width="32" height="32" loading="lazy">
+                                <img src="img/Icons/CssIcon.png" alt="CSS3" width="32" height="32" loading="lazy">
+                            </div>
+                            <p>A journey through web development, experimentation, and refreshing skills.</p>
+                        </a>
+                    </article>
+                </div>
+            </div>
+        </section>
 
+        <!-- About & Contact Section -->
+        <section id="about" class="section section-alt">
+            <div class="container">
+                <div class="about-grid">
+                    <div class="about-card">
+                        <h2>What's Next</h2>
+                        <ul class="feature-list">
+                            <li>✅ A proper 'About' section</li>
+                            <li>📚 A 'Reading' or 'Blog' section</li>
+                            <li>🚀 More projects to be added</li>
+                            <li>✨ Enhanced animations and interactions</li>
+                        </ul>
+                    </div>
 
-			<div class="grid grid_5">
-						
-						<div class="grid_title text-align">
-						<span class="page_Innertitle">Project Catalog</span>
-						<p  class="text_short">click on a project to download its source code.</p>
-						</div>
-						
-						<div class="Project grid_element grid_2 text_center">
-						<a href="https://github.com/cheveche/Chatbot/archive/master.zip">
-						
-							<div class="image image_Prj">
-							
-								<img src="img/Prj/prjtwo-pypro.jpg" alt="" width="200" height="200">
-							</div>
-							
-							<h2>P3: Chatbot</h2>
-							
-							<table>
-								<tr>
-									<td><img src="img/Icons/PythonIcon.png" alt="" width="32" height="32"></td>
-									<td><img src="img/Icons/SQLIcon.png" alt="" width="32" height="32"></td>
-								</tr>
-							</table>
+                    <div id="contact" class="about-card">
+                        <h2>Let's Connect</h2>
+                        <a href="mailto:chevechereg@gmail.com?subject=Contact%20from%20Portfolio" class="contact-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            <span>Email Me</span>
+                        </a>
+                        <p class="contact-note">A proper contact form is coming soon!</p>
+                        
+                        <!-- Consider adding GitHub/LinkedIn SVG icons here -->
+                    </div>
 
-							
-							<p class="text_short"> 
-							A simple chatbot developed in Python that mixed "scripted" answers with improvisation based on previous discussion 
-							</p>
-							
-						</a>
-					</div>
-					
-					<div class="Project grid_element grid_2 text_center">
-						<a href="https://github.com/cheveche/Tileworld/archive/master.zip">
-						
-							<div class="image image_Prj">
-							
-								<img src="img/Prj/prjthree-javagame.jpg" alt="" width="200" height="200">
-							</div>
-							
-							<h2>P2: Tiles World</h2>
-							
-							<table>
-								<tr>
-									<td><img src="img/Icons/JavaIcon.png" alt="" width="32" height="32"></td>
-								</tr>
-							</table>
+                    <div class="about-card">
+                        <h2>About the Author</h2>
+                        <p>Currently a consultant in Information Systems, my job involves data modeling and data management for financial reporting. As clients request more custom solutions, I've learned various languages through my assignments. The projects on this site are experiments to apply new knowledge while having a bit of fun.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
-							
-							<p class="text_short"> 
-							  A simple game being developed in order to apply all the Java language principles.
-							  This project will be updated regularly.
-							</p>
-							
-						</a>
-					</div>
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; <span id="year"></span> ChevecheDev | Personal Project Portfolio</p>
+        </div>
+    </footer>
 
-					<div class="Project grid_element grid_2 text_center">
-						
-						<a href="https://github.com/cheveche/cheveche.github.io/archive/master.zip">
-						
-							<div class="image image_Prj">
-							
-								<img src="img/Prj/prjone-web.jpg" alt="" width="200" height="200">
-							
-							</div>
-							
-							<h2>P1: Web Portfolio</h2>
-							
-							<table>
-								<tr>
-									<td><img src="img/Icons/Html5Icon.png" alt="" width="32" height="32"></td>
-									<td><img src="img/Icons/JSIcon.png" alt="" width="32" height="32"></td>
-									<td><img src="img/Icons/CssIcon.png" alt="" width="32" height="32"></td>
-								</tr>
-							</table>
-
-							
-							<p class="text_short">
-							A journey through web development, experimentation and refreshing skills. 
-							</p>
-							
-						</a>
-			</div>
-
-
-
-		</div>
-	</div>
-
-	<div class="bloc_section bloc_section_alt" id="about">
-			<div class="grid grid_5">
-			
-			
-					<div class="grid_element grid_2">
-						<h2>What next on this site :</h2>
-							<ul class="text_List">
-								<li><strong>A proper 'About' sections</strong></</li>
-								<li>maybe a 'reading' sections</li>
-								<li>More projects to be added...</li>
-								<li>Adding more animations features to the site</li>
-							</ul>
-					</div>
-
-					<div class="grid_element grid_2">
-						<h2>Let's be in contact :</h2>
-						<a href="mailto:chevechereg@gmail.com &subject=Contact"> 
-							<img src="img\mail.png" alt="Email me" width="60" height="315">
-							<p class="text_short">a proper formular is coming soon...</p
-						</a>
-					</div>
-					
-					
-					<div class="grid_element grid_2">
-								<h2>About the author:</h2>
-								<p class="text_short">Currently consultant in Information system, my job is to do data modelling and data management for financial reporting. As my clients request more and more customs solutions that needs to be coded in the systems, I have learned different languages through my assignment. The projects on this site are experiments to apply and learn more while having a bit of fun.</p>
-					</div>
-					
-	
-			</div> 
-			
-			
-			<div class="grid grid_5">
-					<div class="grid_element grid_2">
-							<p class="text_disclaimer">201X | Cheveche | Personal Project Portfolio </p>
-					</div>
-			
-			</div> 		
-	</div>
-	
-	
-	
-		
-		<script src="js/three.min.js"></script>
-		<script src="js/TweenMax.min.js"></script>
-		<script src="js/sphere.js"></script>
-	
-	
-	
-		<script>
-		  window.dataLayer = window.dataLayer || [];
-		  function gtag(){dataLayer.push(arguments);}
-		  gtag('js', new Date());
-
-		  gtag('config', 'UA-121734935-1');
-		</script>
-	
+    <script>
+        // Dynamic year for footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+        
+        // Optional: Add smooth scroll behavior for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
 </body>
-
-</HTML>
+</html>
