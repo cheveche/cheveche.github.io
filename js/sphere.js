@@ -123,8 +123,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. MOUSE EASING (Lower number = slower, lazier response to mouse)
     // Changed from 0.05 to 0.02 for a smoother, more delayed follow
-    targetX += (mouseX - targetX) * 0.02;
-    targetY += (mouseY - targetY) * 0.02;
+    targetX += (mouseX - targetX) * 0.002;
+    targetY += (mouseY - targetY) * 0.002;
 
     // 2. BASE AUTO-ROTATION (Lower number = slower spinning)
     // Changed from 0.002 to 0.00005 (4x slower) on Y-axis
@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 3. BREATHING PULSE SPEED (Lower number = slower expansion/contraction)
     // Changed from 0.8 to 0.3 for a very slow, ambient "breathing" effect
-    const scale = 1 + Math.sin(elapsedTime * 0.03) * 0.003;
+    const scale = 1 + Math.sin(elapsedTime * 0.003) * 0.0003;
     sphere.scale.set(scale, scale, scale);
 
     renderer.render(scene, camera);
