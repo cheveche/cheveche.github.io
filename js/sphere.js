@@ -4,11 +4,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. Scene Setup
     const scene = new THREE.Scene();
-    // Keep background transparent so CSS gradient/background shows through
-    scene.background = null; 
+    scene.background = null; // Transparent to show CSS background
 
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 35; // Adjusted for better framing
+    camera.position.z = 35;
 
     const renderer = new THREE.WebGLRenderer({ 
         canvas: canvas, 
@@ -16,10 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
         antialias: true 
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Sharp on retina displays
+    // Cap pixel ratio at 2 to prevent mobile GPU overheating
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
 
-    // 2. Procedural Texture Generation 
-    // (Creates a soft glowing dot in memory, no external image file needed!)
+    // 2. Procedural Texture Generation (Soft glowing dot)
     function getProceduralTexture() {
         const size = 64;
         const data = new Uint8Array(4 * size * size);
@@ -28,12 +27,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const x = (i % size) - size / 2;
             const y = Math.floor(i / size) - size / 2;
             const dist = Math.sqrt(x * x + y * y);
-            const alpha = Math.max(0, 1 - dist / (size / 2)); // Soft radial gradient
+            const alpha = Math.max(0, 1 - dist / (size / 2)); 
             
-            data[stride] = 255;       // R
-            data[stride + 1] = 255;   // G
-            data[stride + 2] = 255;   // B
-            data[stride + 3] = alpha * 255; // A
+            data[stride] = 255;       
+            data[stride + 1] = 255;   
+            data[stride + 2] = 255;   
+            data[stride + 3] = alpha * 255; 
         }
         const texture = new THREE.DataTexture(data, size, size, THREE.RGBAFormat);
         texture.needsUpdate = true;
@@ -47,19 +46,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const colors = new Float32Array(particleCount * 3);
     const sizes = new Float32Array(particleCount);
 
-    // Match these colors to your website's accent colors!
     const color1 = new THREE.Color(0x38bdf8); // Cyan/Light Blue
     const color2 = new THREE.Color(0x818cf8); // Soft Purple
+    const goldenAngle = Math.PI * (3 - Math.sqrt(5)); // ~2.39996
 
     for (let i = 0; i < particleCount; i++) {
-        // Fibonacci sphere algorithm for even distribution
-        const phi = Math.acos(-1 + (2 * i) / particleCount);
-        const theta = Math.sqrt(particleCount * Math.PI) * phi;
-        const radius = 16;
+        // True Fibonacci Sphere algorithm for perfect, pole-to-pole distribution
+        const y = 1 - (i / (particleCount - 1)) * 2; // y goes from 1 to -1
+        const radius = Math.sqrt(1 - y * y); // Radius at y
+        const theta = goldenAngle * i; // Golden angle increment
 
-        positions[i * 3] = radius * Math.cos(theta) * Math.sin(phi);
-        positions[i * 3 + 1] = radius * Math.sin(theta) * Math.sin(phi);
-        positions[i * 3 + 2] = radius * Math.cos(phi);
+        const sphereRadius = 16;
+        positions[i * 3] = Math.cos(theta) * radius * sphereRadius;
+        positions[i * 3 + 1] = y * sphereRadius;
+        positions[i * 3 + 2] = Math.sin(theta) * radius * sphereRadius;
 
         // Mix colors randomly between color1 and color2
         const mixedColor = color1.clone().lerp(color2, Math.random());
@@ -67,23 +67,26 @@ document.addEventListener('DOMContentLoaded', () => {
         colors[i * 3 + 1] = mixedColor.g;
         colors[i * 3 + 2] = mixedColor.b;
 
-        sizes[i] = Math.random() * 3 + 1; // Randomize particle sizes
+        sizes[i] = Math.random() * 3 + 1; 
     }
 
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
     geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
-    // 4. Shader Material (Links to the shaders in your HTML)
+    // 4. Shader Material
+    const vertexShaderEl = document.getElementById('wrapVertexShader');
+    const fragmentShaderEl = document.getElementById('wrapFragmentShader');
+
     const material = new THREE.ShaderMaterial({
         uniforms: {
             texture: { value: getProceduralTexture() }
         },
-        vertexShader: document.getElementById('wrapVertexShader').textContent,
-        fragmentShader: document.getElementById('wrapFragmentShader').textContent,
+        vertexShader: vertexShaderEl ? vertexShaderEl.textContent : '',
+        fragmentShader: fragmentShaderEl ? fragmentShaderEl.textContent : '',
         transparent: true,
         depthWrite: false,
-        blending: THREE.AdditiveBlending // Makes overlapping particles glow
+        blending: THREE.AdditiveBlending 
     });
 
     const sphere = new THREE.Points(geometry, material);
@@ -95,22 +98,23 @@ document.addEventListener('DOMContentLoaded', () => {
     let targetX = 0;
     let targetY = 0;
 
-    const windowHalfX = window.innerWidth / 2;
-    const windowHalfY = window.innerHeight / 2;
+    // Changed to 'let' so they can be updated on resize
+    let windowHalfX = window.innerWidth / 2;
+    let windowHalfY = window.innerHeight / 2;
 
-    // Mouse movement
+    // Mouse movement (passive for performance)
     document.addEventListener('mousemove', (event) => {
         mouseX = (event.clientX - windowHalfX) * 0.001;
         mouseY = (event.clientY - windowHalfY) * 0.001;
-    });
+    }, { passive: true });
 
-    // Touch movement (for mobile devices)
+    // Touch movement (passive for performance)
     document.addEventListener('touchmove', (event) => {
         if (event.touches.length > 0) {
             mouseX = (event.touches[0].clientX - windowHalfX) * 0.001;
             mouseY = (event.touches[0].clientY - windowHalfY) * 0.001;
         }
-    });
+    }, { passive: true });
 
     const clock = new THREE.Clock();
 
@@ -141,5 +145,9 @@ document.addEventListener('DOMContentLoaded', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
+        
+        // FIX: Recalculate center points to prevent mouse tracking drift
+        windowHalfX = window.innerWidth / 2;
+        windowHalfY = window.innerHeight / 2;
     });
 });
