@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 3. BREATHING PULSE SPEED (Lower number = slower expansion/contraction)
     // Changed from 0.8 to 0.3 for a very slow, ambient "breathing" effect
-    const scale = 1 + Math.sin(elapsedTime * 0.3) * 0.03;
+    const scale = 1 + Math.sin(elapsedTime * 0.03) * 0.003;
     sphere.scale.set(scale, scale, scale);
 
     renderer.render(scene, camera);
