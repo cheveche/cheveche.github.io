@@ -1,201 +1,145 @@
-var canvas = document.querySelector('canvas');
-var width = canvas.offsetWidth,
-    height = canvas.offsetHeight;
+document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('scene');
+    if (!canvas) return;
 
-var colors = [
-    new THREE.Color("rgb(111, 137, 143)"),
-    new THREE.Color("rgb(25, 156, 255)"),
-    new THREE.Color("rgb(0, 101, 176)")];
+    // 1. Scene Setup
+    const scene = new THREE.Scene();
+    // Keep background transparent so CSS gradient/background shows through
+    scene.background = null; 
 
-var renderer = new THREE.WebGLRenderer({
-    canvas: canvas,
-    antialias: true
-});
-renderer.setPixelRatio(window.devicePixelRatio > 1 ? 2 : 1);
-renderer.setSize(width, height);
-renderer.setClearColor(0xFFFFFF);
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 35; // Adjusted for better framing
 
-var scene = new THREE.Scene();
+    const renderer = new THREE.WebGLRenderer({ 
+        canvas: canvas, 
+        alpha: true, 
+        antialias: true 
+    });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Sharp on retina displays
 
-var raycaster = new THREE.Raycaster();
-raycaster.params.Points.threshold = 6;
-
-
-var camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 2000);
-camera.position.set(0, 0, 350);
-
-var galaxy = new THREE.Group();
-scene.add(galaxy);
-
-// Create dots
-var loader = new THREE.TextureLoader();
-loader.crossOrigin = "";
-var dotTexture = loader.load("img/dotTexture.png");
-var dotsAmount = 3000;
-var dotsGeometry = new THREE.Geometry();
-var positions = new Float32Array(dotsAmount * 3);
-
-var sizes = new Float32Array(dotsAmount);
-var colorsAttribute = new Float32Array(dotsAmount * 3);
-for (var i = 0; i < dotsAmount; i++) {
-    var vector = new THREE.Vector3();
-
-    vector.color = Math.floor(Math.random() * colors.length);
-    vector.theta = Math.random() * Math.PI * 2;
-    vector.phi =
-        (1 - Math.sqrt(Math.random())) *
-        Math.PI /
-        2 *
-        (Math.random() > 0.5 ? 1 : -1);
-
-    vector.x = Math.cos(vector.theta) * Math.cos(vector.phi);
-    vector.y = Math.sin(vector.phi);
-    vector.z = Math.sin(vector.theta) * Math.cos(vector.phi);
-    vector.multiplyScalar(120 + (Math.random() - 0.5) * 5);
-    vector.scaleX = 5;
-
-    if (Math.random() > 0.5) {
-        moveDot(vector, i);
-    }
-    dotsGeometry.vertices.push(vector);
-    vector.toArray(positions, i * 3);
-    colors[vector.color].toArray(colorsAttribute, i*3);
-    sizes[i] = 5;
-}
-
-function moveDot(vector, index) {
-        var tempVector = vector.clone();
-        tempVector.multiplyScalar((Math.random() - 0.5) * 0.2 + 1);
-        TweenMax.to(vector, Math.random() * 3 + 3, {
-            x: tempVector.x,
-            y: tempVector.y,
-            z: tempVector.z,
-            yoyo: true,
-            repeat: -1,
-            delay: -Math.random() * 3,
-            ease: Power0.easeNone,
-            onUpdate: function () {
-                attributePositions.array[index*3] = vector.x;
-                attributePositions.array[index*3+1] = vector.y;
-                attributePositions.array[index*3+2] = vector.z;
-            }
-        });
-}
-
-var bufferWrapGeom = new THREE.BufferGeometry();
-var attributePositions = new THREE.BufferAttribute(positions, 3);
-bufferWrapGeom.addAttribute('position', attributePositions);
-var attributeSizes = new THREE.BufferAttribute(sizes, 1);
-bufferWrapGeom.addAttribute('size', attributeSizes);
-var attributeColors = new THREE.BufferAttribute(colorsAttribute, 3);
-bufferWrapGeom.addAttribute('color', attributeColors);
-var shaderMaterial = new THREE.ShaderMaterial({
-    uniforms: {
-        texture: {
-            value: dotTexture
+    // 2. Procedural Texture Generation 
+    // (Creates a soft glowing dot in memory, no external image file needed!)
+    function getProceduralTexture() {
+        const size = 64;
+        const data = new Uint8Array(4 * size * size);
+        for (let i = 0; i < size * size; i++) {
+            const stride = i * 4;
+            const x = (i % size) - size / 2;
+            const y = Math.floor(i / size) - size / 2;
+            const dist = Math.sqrt(x * x + y * y);
+            const alpha = Math.max(0, 1 - dist / (size / 2)); // Soft radial gradient
+            
+            data[stride] = 255;       // R
+            data[stride + 1] = 255;   // G
+            data[stride + 2] = 255;   // B
+            data[stride + 3] = alpha * 255; // A
         }
-    },
-    vertexShader: document.getElementById("wrapVertexShader").textContent,
-    fragmentShader: document.getElementById("wrapFragmentShader").textContent,
-    transparent:true
-});
-var wrap = new THREE.Points(bufferWrapGeom, shaderMaterial);
-scene.add(wrap);
-
-// Create black segments
-var segmentsGeom = new THREE.Geometry();
-var segmentsMat = new THREE.LineBasicMaterial({
-    color: 0x1e1896,
-    transparent: true,
-    opacity: 0.3,
-    vertexColors: THREE.VertexColors
-});
-for (i = dotsGeometry.vertices.length - 1; i >= 0; i--) {
-    vector = dotsGeometry.vertices[i];
-    for (var j = dotsGeometry.vertices.length - 1; j >= 0; j--) {
-        if (i !== j && vector.distanceTo(dotsGeometry.vertices[j]) < 12) {
-            segmentsGeom.vertices.push(vector);
-            segmentsGeom.vertices.push(dotsGeometry.vertices[j]);
-            segmentsGeom.colors.push(colors[vector.color]);
-            segmentsGeom.colors.push(colors[vector.color]);
-        }
+        const texture = new THREE.DataTexture(data, size, size, THREE.RGBAFormat);
+        texture.needsUpdate = true;
+        return texture;
     }
-}
-var segments = new THREE.LineSegments(segmentsGeom, segmentsMat);
-galaxy.add(segments);
 
-var hovered = [];
-var prevHovered = [];
-function render(a) {
-    var i;
-    dotsGeometry.verticesNeedUpdate = true;
-    segmentsGeom.verticesNeedUpdate = true;
-    
-    raycaster.setFromCamera( mouse, camera );
-    var intersections = raycaster.intersectObjects([wrap]);
-    hovered = [];
-    if (intersections.length) {
-        for(i = 0; i < intersections.length; i++) {
-            var index = intersections[i].index;
-            hovered.push(index);
-            if (prevHovered.indexOf(index) === -1) {
-                onDotHover(index);
-            }
-         }
-    }
-    for(i = 0; i < prevHovered.length; i++){
-        if(hovered.indexOf(prevHovered[i]) === -1){
-            mouseOut(prevHovered[i]);
-        }
-    }
-    prevHovered = hovered.slice(0);
-    attributeSizes.needsUpdate = true;
-    attributePositions.needsUpdate = true;
-    renderer.render(scene, camera);
-}
+    // 3. Particle Sphere Geometry
+    const particleCount = 2500;
+    const geometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(particleCount * 3);
+    const colors = new Float32Array(particleCount * 3);
+    const sizes = new Float32Array(particleCount);
 
-function onDotHover(index) {
-    dotsGeometry.vertices[index].tl = new TimelineMax();
-    dotsGeometry.vertices[index].tl.to(dotsGeometry.vertices[index], 1, {
-        scaleX: 10,
-        ease: Elastic.easeOut.config(2, 0.2),
-        onUpdate: function() {
-            attributeSizes.array[index] = dotsGeometry.vertices[index].scaleX;
+    // Match these colors to your website's accent colors!
+    const color1 = new THREE.Color(0x38bdf8); // Cyan/Light Blue
+    const color2 = new THREE.Color(0x818cf8); // Soft Purple
+
+    for (let i = 0; i < particleCount; i++) {
+        // Fibonacci sphere algorithm for even distribution
+        const phi = Math.acos(-1 + (2 * i) / particleCount);
+        const theta = Math.sqrt(particleCount * Math.PI) * phi;
+        const radius = 16;
+
+        positions[i * 3] = radius * Math.cos(theta) * Math.sin(phi);
+        positions[i * 3 + 1] = radius * Math.sin(theta) * Math.sin(phi);
+        positions[i * 3 + 2] = radius * Math.cos(phi);
+
+        // Mix colors randomly between color1 and color2
+        const mixedColor = color1.clone().lerp(color2, Math.random());
+        colors[i * 3] = mixedColor.r;
+        colors[i * 3 + 1] = mixedColor.g;
+        colors[i * 3 + 2] = mixedColor.b;
+
+        sizes[i] = Math.random() * 3 + 1; // Randomize particle sizes
+    }
+
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+    // 4. Shader Material (Links to the shaders in your HTML)
+    const material = new THREE.ShaderMaterial({
+        uniforms: {
+            texture: { value: getProceduralTexture() }
+        },
+        vertexShader: document.getElementById('wrapVertexShader').textContent,
+        fragmentShader: document.getElementById('wrapFragmentShader').textContent,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending // Makes overlapping particles glow
+    });
+
+    const sphere = new THREE.Points(geometry, material);
+    scene.add(sphere);
+
+    // 5. Interactivity & Animation
+    let mouseX = 0;
+    let mouseY = 0;
+    let targetX = 0;
+    let targetY = 0;
+
+    const windowHalfX = window.innerWidth / 2;
+    const windowHalfY = window.innerHeight / 2;
+
+    // Mouse movement
+    document.addEventListener('mousemove', (event) => {
+        mouseX = (event.clientX - windowHalfX) * 0.001;
+        mouseY = (event.clientY - windowHalfY) * 0.001;
+    });
+
+    // Touch movement (for mobile devices)
+    document.addEventListener('touchmove', (event) => {
+        if (event.touches.length > 0) {
+            mouseX = (event.touches[0].clientX - windowHalfX) * 0.001;
+            mouseY = (event.touches[0].clientY - windowHalfY) * 0.001;
         }
     });
-}
 
-function mouseOut(index) {
-    dotsGeometry.vertices[index].tl.to(dotsGeometry.vertices[index], 0.4, {
-        scaleX: 5,
-        ease: Power2.easeOut,
-        onUpdate: function() {
-            attributeSizes.array[index] = dotsGeometry.vertices[index].scaleX;
-        }
+    const clock = new THREE.Clock();
+
+    function animate() {
+        requestAnimationFrame(animate);
+
+        const elapsedTime = clock.getElapsedTime();
+
+        // Smooth easing for mouse follow
+        targetX += (mouseX - targetX) * 0.05;
+        targetY += (mouseY - targetY) * 0.05;
+
+        // Base auto-rotation + mouse influence
+        sphere.rotation.y += 0.002 + targetX;
+        sphere.rotation.x += 0.001 + targetY;
+
+        // Gentle "breathing" pulse effect
+        const scale = 1 + Math.sin(elapsedTime * 0.8) * 0.03;
+        sphere.scale.set(scale, scale, scale);
+
+        renderer.render(scene, camera);
+    }
+
+    animate();
+
+    // 6. Responsive Resize Handler
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
     });
-}
-
-function onResize() {
-    canvas.style.width = '';
-    canvas.style.height = '';
-    width = canvas.offsetWidth;
-    height = canvas.offsetHeight;
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
-    renderer.setSize(width, height);
-}
-
-var mouse = new THREE.Vector2(-100,-100);
-function onMouseMove(e) {
-    var canvasBounding = canvas.getBoundingClientRect();
-    mouse.x = ((e.clientX - canvasBounding.left) / width) * 2 - 1;
-    mouse.y = -((e.clientY - canvasBounding.top) / height) * 2 + 1;
-}
-
-TweenMax.ticker.addEventListener("tick", render);
-window.addEventListener("mousemove", onMouseMove);
-var resizeTm;
-window.addEventListener("resize", function(){
-    resizeTm = clearTimeout(resizeTm);
-    resizeTm = setTimeout(onResize, 200);
 });
