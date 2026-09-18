@@ -1,4 +1,3 @@
-/* 1. FONT IMPORT: Ensure 'Inter' actually loads */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
 
 :root {
@@ -11,19 +10,14 @@
     --card-bg: rgba(30, 41, 59, 0.7);
     --border-radius: 12px;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --nav-height: 60px; /* Added for scroll padding calculation */
+    --nav-height: 60px;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 html {
     scroll-behavior: smooth;
-    /* 2. SCROLL PADDING: Prevents sticky nav from covering section titles */
-    scroll-padding-top: var(--nav-height); 
+    scroll-padding-top: var(--nav-height);
 }
 
 body {
@@ -31,10 +25,10 @@ body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
     line-height: 1.6;
-    -webkit-font-smoothing: antialiased; /* Makes fonts look sharper on Mac/iOS */
+    -webkit-font-smoothing: antialiased;
 }
 
-/* Hero Header */
+/* --- HERO & CANVAS (CRITICAL FOR SPHERE) --- */
 .hero-header {
     position: relative;
     height: 80vh;
@@ -52,6 +46,7 @@ body {
     width: 100%;
     height: 100%;
     z-index: 0;
+    display: block; /* Prevents inline spacing issues */
 }
 
 .hero-content {
@@ -59,13 +54,32 @@ body {
     z-index: 1;
     text-align: center;
     padding: 2rem;
-    pointer-events: none; /* Lets mouse pass through to canvas */
-    background: radial-gradient(circle, rgba(15,23,42,0.6) 0%, rgba(15,23,42,0) 70%); /* Improves text readability over particles */
+    pointer-events: none;
+    background: radial-gradient(circle, rgba(15,23,42,0.7) 0%, rgba(15,23,42,0) 70%);
 }
 
-.hero-content a, 
-.hero-content button {
-    pointer-events: auto; /* Re-enable clicks on interactive elements */
+.hero-content a, .hero-content button { pointer-events: auto; }
+
+.version-badge {
+    display: inline-block;
+    background: rgba(56, 189, 248, 0.1);
+    color: var(--accent);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.15);
+    animation: fadeInDown 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+@keyframes fadeInDown {
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .hero-title {
@@ -73,8 +87,8 @@ body {
     font-weight: 800;
     background: linear-gradient(to right, var(--accent), #818cf8);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-clip: text; /* Standard property for future-proofing */
     margin-bottom: 1rem;
     line-height: 1.1;
 }
@@ -86,13 +100,13 @@ body {
     margin: 0 auto;
 }
 
-/* Navigation */
+/* --- NAVIGATION --- */
 .main-nav {
     position: sticky;
     top: 0;
     background: rgba(15, 23, 42, 0.85);
     backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px); /* Safari support */
+    -webkit-backdrop-filter: blur(12px);
     z-index: 100;
     border-bottom: 1px solid rgba(255,255,255,0.1);
     height: var(--nav-height);
@@ -118,45 +132,20 @@ body {
     border-radius: 6px;
 }
 
-.nav-list a:hover,
-.nav-list a:focus-visible { /* 3. ACCESSIBILITY: Keyboard focus state */
+.nav-list a:hover, .nav-list a:focus-visible {
     color: var(--accent);
     background: rgba(56, 189, 248, 0.1);
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
 }
 
-/* Layout Utilities */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
-}
+/* --- LAYOUT --- */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+.section { padding: 5rem 0; }
+.section-alt { background-color: var(--bg-secondary); }
+.section-header { text-align: center; margin-bottom: 3rem; }
+.section-title { font-size: clamp(2rem, 4vw, 2.5rem); margin-bottom: 0.5rem; }
+.section-subtitle { color: var(--text-secondary); font-size: 1.1rem; }
 
-.section {
-    padding: 5rem 0;
-}
-
-.section-alt {
-    background-color: var(--bg-secondary);
-}
-
-.section-header {
-    text-align: center;
-    margin-bottom: 3rem;
-}
-
-.section-title {
-    font-size: clamp(2rem, 4vw, 2.5rem);
-    margin-bottom: 0.5rem;
-}
-
-.section-subtitle {
-    color: var(--text-secondary);
-    font-size: 1.1rem;
-}
-
-/* Projects Grid */
+/* --- PROJECTS --- */
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -179,12 +168,6 @@ body {
     box-shadow: 0 10px 30px -10px rgba(56, 189, 248, 0.25);
 }
 
-/* 4. ACCESSIBILITY: Focus state for project cards */
-.project-card:focus-within {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3);
-}
-
 .project-link {
     display: flex;
     flex-direction: column;
@@ -197,143 +180,4 @@ body {
 .project-image {
     width: 100%;
     height: 200px;
-    background: var(--bg-primary);
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.project-image img {
-    width: 100%;   /* 5. FIX: Ensures image fills the container */
-    height: 100%;  /* 5. FIX: Prevents squished/empty space */
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.project-card:hover .project-image img {
-    transform: scale(1.05); /* Subtle zoom effect on hover */
-}
-
-.project-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: var(--accent);
-}
-
-.project-card p {
-    color: var(--text-secondary);
-    margin-top: auto; /* Pushes text to bottom if cards have uneven heights */
-}
-
-.tech-stack {
-    display: flex;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-}
-
-.tech-stack img {
-    width: 32px;
-    height: 32px;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-}
-
-/* About Grid */
-.about-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-}
-
-.about-card {
-    background: var(--card-bg);
-    padding: 2rem;
-    border-radius: var(--border-radius);
-    border: 1px solid rgba(255,255,255,0.05);
-}
-
-.about-card h2 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: var(--accent);
-}
-
-.feature-list {
-    list-style: none;
-}
-
-.feature-list li {
-    padding: 0.5rem 0;
-    color: var(--text-secondary);
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-
-.feature-list li:last-child {
-    border-bottom: none;
-}
-
-.contact-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: var(--accent);
-    color: var(--bg-primary);
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 700;
-    margin: 1rem 0;
-    transition: var(--transition);
-}
-
-.contact-btn:hover,
-.contact-btn:focus-visible {
-    background: var(--accent-hover);
-    outline: 2px solid var(--text-primary);
-    outline-offset: 2px;
-}
-
-.contact-note {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    font-style: italic;
-}
-
-/* Footer */
-.main-footer {
-    padding: 2rem 0;
-    text-align: center;
-    color: var(--text-secondary);
-    border-top: 1px solid rgba(255,255,255,0.05);
-    font-size: 0.9rem;
-}
-
-/* 6. ACCESSIBILITY: Respect user's motion preferences */
-@media (prefers-reduced-motion: reduce) {
-    html {
-        scroll-behavior: auto;
-    }
-    .project-card, .project-image img, .nav-list a, .contact-btn {
-        transition: none !important;
-        transform: none !important;
-    }
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .hero-header {
-        height: 60vh;
-        min-height: 400px;
-    }
-    
-    .nav-list {
-        gap: 1rem;
-        font-size: 0.95rem;
-    }
-    
-    .section {
-        padding: 3rem 0;
-    }
-}
+    background
