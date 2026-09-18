@@ -117,20 +117,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const clock = new THREE.Clock();
 
     function animate() {
-        requestAnimationFrame(animate);
+    requestAnimationFrame(animate);
 
-        const elapsedTime = clock.getElapsedTime();
+    const elapsedTime = clock.getElapsedTime();
 
-        targetX += (mouseX - targetX) * 0.05;
-        targetY += (mouseY - targetY) * 0.05;
+    // 1. MOUSE EASING (Lower number = slower, lazier response to mouse)
+    // Changed from 0.05 to 0.02 for a smoother, more delayed follow
+    targetX += (mouseX - targetX) * 0.02;
+    targetY += (mouseY - targetY) * 0.02;
 
-        sphere.rotation.y += 0.002 + targetX;
-        sphere.rotation.x += 0.001 + targetY;
+    // 2. BASE AUTO-ROTATION (Lower number = slower spinning)
+    // Changed from 0.002 to 0.0005 (4x slower) on Y-axis
+    // Changed from 0.001 to 0.0002 (5x slower) on X-axis
+    sphere.rotation.y += 0.0005 + targetX;
+    sphere.rotation.x += 0.0002 + targetY;
 
-        const scale = 1 + Math.sin(elapsedTime * 0.8) * 0.03;
-        sphere.scale.set(scale, scale, scale);
+    // 3. BREATHING PULSE SPEED (Lower number = slower expansion/contraction)
+    // Changed from 0.8 to 0.3 for a very slow, ambient "breathing" effect
+    const scale = 1 + Math.sin(elapsedTime * 0.3) * 0.03;
+    sphere.scale.set(scale, scale, scale);
 
-        renderer.render(scene, camera);
+    renderer.render(scene, camera);
     }
 
     animate();
